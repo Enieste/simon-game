@@ -1,0 +1,21 @@
+{
+  "name": "simon-game",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "react-scripts": "0.6.0"
+  },
+  "dependencies": {
+    "async": "^2.0.1",
+    "classnames": "^2.2.5",
+    "d3": "^4.2.6",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
