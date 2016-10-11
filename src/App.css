@@ -3,9 +3,19 @@
 @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css";
 
 .App {
-    height:1000px;
+    min-height: 1000px;
     text-align: center;
-    background-image: url('../res/space.jpg');
+    background: url('../res/space.jpg') repeat;
+}
+
+@media (max-width: 800px) {
+   .App {
+       background: url('../res/space.jpg') no-repeat center center fixed;
+       -webkit-background-size: cover;
+       -moz-background-size: cover;
+       -o-background-size: cover;
+       background-size: cover;
+   }
 }
 
 .App-logo {
@@ -92,8 +102,8 @@
     margin: auto;
     background-color: #d6ddd9;
     border-radius: 100%;
-    width: 200px;
-    height: 200px;
+    width: 210px;
+    height: 210px;
 }
 
 .start-button {
@@ -171,4 +181,23 @@ i:hover:not(.inactive) {
 .inactive {
     color: #8c8e93;
     cursor: default;
+}
+
+.strict-mode {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: center;
+    font-size: 3vh;
+    font-family: 'Lobster', cursive;
+    cursor: pointer;
+    user-select: none;
+}
+
+.strict-mode:hover:not(.inactive){
+    color: #2225ff;
+}
+
+.turn-on {
+    color: #ff4136;
 }

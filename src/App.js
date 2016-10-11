@@ -12,7 +12,9 @@ const App = React.createClass({
       strictMode: false,
       userTurn: false,
       difficulty: 4,
-      userClicksCounter: 0
+      userClicksCounter: 0,
+      userLose: false,
+      userWin: false
     }
   },
   componentDidMount() {
@@ -50,7 +52,14 @@ const App = React.createClass({
   },
   play() {
     if (this.state.currentRound === 21) {
-      console.log("You win!");
+      this.setState({
+        userWin: true
+      });
+      this.timeoutHandler = setTimeout(() => {
+        this.setState({
+          userWin: false
+        })
+      }, 2000);
       this.setState({
         gameStarted: false
       });
@@ -94,10 +103,27 @@ const App = React.createClass({
         }, () => this.play());
       }
     } else {
-      this.setState({
-        userClicksCounter: 0,
-        userTurn: false
-      }, () => this.play());
+      if (this.state.strictMode) {
+        this.setState({
+          userLose: true,
+          gameStarted: false,
+          steps: [],
+          userTurn: false,
+          currentRound: 1,
+          clicked: false,
+          userClicksCounter: 0
+        });
+        this.timeoutHandler = setTimeout(() => {
+          this.setState({
+            userLose: false
+          })
+        }, 2000);
+      } else {
+        this.setState({
+          userClicksCounter: 0,
+          userTurn: false
+        }, () => this.play());
+      }
     }
   },
   mouseDown(i) {
@@ -130,13 +156,26 @@ const App = React.createClass({
   },
   handleRestart() {
     clearTimeout(this.timeoutHandler);
+    this.gainNode.gain.value = 0;
     this.setState({
       gameStarted: false,
       steps: [],
       userTurn: false,
       currentRound: 1,
-      clicked: false
+      clicked: false,
+      userClicksCounter: 0
     });
+  },
+  strictModeHandler() {
+    this.setState({
+      strictMode: !this.state.strictMode
+    });
+  },
+  displayRender() {
+    return this.state.userWin ? 'Win' :
+      this.state.userLose ? 'Lose' :
+        this.state.gameStarted ? `${this.state.currentRound}/20` :
+          this.state.difficulty;
   },
   render() {
     return (
@@ -145,12 +184,13 @@ const App = React.createClass({
           <div className="user-in">
             <div className="start-button" onClick={this.startHandler} disabled={this.state.gameStarted}>Start
             </div>
+            <div className={`strict-mode ${this.state.gameStarted ? 'inactive' : false} ${this.state.strictMode ? 'turn-on' : false}`} onClick={this.strictModeHandler} disabled={this.state.gameStarted}>Strict mode</div>
             <div className="restart" onClick={this.handleRestart}>Reset</div>
             <div className="control">
               <i className={`fa fa-arrow-circle-up fa-2x ${this.state.gameStarted ? 'inactive' : false}`} aria-hidden="true" onClick={this.state.gameStarted ? false : this.raiseDifficultyHandler}/><div className="noselect">Difficulty</div>
               <i className={`fa fa-arrow-circle-down fa-2x ${this.state.gameStarted ? 'inactive' : false}`} aria-hidden="true" onClick={this.state.gameStarted ? false : this.reduceDifficultyHandler}/>
             </div>
-            <div className="display noselect">{this.state.gameStarted ? `${this.state.currentRound}/20` : this.state.difficulty}</div>
+            <div className="display noselect">{this.displayRender()}</div>
           </div>
           <Piesimon x={300} y={300} outerRadius={250} innerRadius={100}
                   data={Array.apply(null, Array(this.state.difficulty)).map((_) => {
